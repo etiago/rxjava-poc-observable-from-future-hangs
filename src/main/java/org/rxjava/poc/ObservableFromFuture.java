@@ -28,7 +28,13 @@ public class ObservableFromFuture {
                                 BufferedReader bufferedReader =
                                         new BufferedReader(inputStreamReader);
 
-                                return Observable.fromIterable(bufferedReader.lines()::iterator).reduce(String::concat);
+                                return Observable
+                                        .fromIterable(bufferedReader.lines()::iterator)
+                                        .reduce(String::concat).map(s -> {
+                                            bufferedReader.close();
+                                            inputStreamReader.close();
+                                            return s;
+                                        });
                             })
                             .blockingGet();
 
